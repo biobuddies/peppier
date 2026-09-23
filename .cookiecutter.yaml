@@ -1,0 +1,4 @@
+default_context:
+    description: Python utilities including PEP-8 wrappers
+    languages: Node,Python
+    publish_to_pypi: true

@@ -17,12 +17,12 @@ from peppier import compact, identity, undent
             {},
             {'b': 0, 'c': '', 'd': False, 'e': []},
         ),
-        ({}, {'a': None, 'b': 0}, {'b': 0}),
+        (None, {'a': None, 'b': 0}, {'b': 0}),
         ({1: 'one', 'a': 'a'}, {'a': None, 'b': 'b'}, {1: 'one', 'b': 'b'}),
     ),
     ids=('empty', 'mapping', 'keywords', 'keywords-override-mapping'),
 )
-def test_compact(mapping: dict, kwargs: dict, expected: dict) -> None:
+def test_compact(mapping: dict | None, kwargs: dict, expected: dict) -> None:
     assert compact(mapping, **kwargs) == expected
 
 

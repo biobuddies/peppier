@@ -4,9 +4,11 @@ from collections.abc import Mapping
 from textwrap import dedent
 
 
-def compact[K, V](mapping: Mapping[K, V | None] = {}, /, **kwargs: V | None) -> dict[K | str, V]:
+def compact[K, V](
+    mapping: Mapping[K, V | None] | None = None, /, **kwargs: V | None
+) -> dict[K | str, V]:
     """Build a dict like dict(), dropping None values but keeping other falsy values."""
-    return {key: value for key, value in {**mapping, **kwargs}.items() if value is not None}
+    return {key: value for key, value in {**(mapping or {}), **kwargs}.items() if value is not None}
 
 
 def identity[T](value: T, /) -> T:

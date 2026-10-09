@@ -12,7 +12,7 @@ def compact[K, V](
 
 
 def identity[T](value: T, /) -> T:
-    """Return value unchanged, for interfaces requiring a function."""
+    """Return value unchanged, for interfaces requiring a callable."""
     return value
 
 

@@ -7,7 +7,7 @@ from textwrap import dedent
 def compact[K, V](
     mapping: Mapping[K, V | None] | None = None, /, **kwargs: V | None
 ) -> dict[K | str, V]:
-    """Build a dict like dict(), dropping None, '', and b'' values.
+    """Build a dict like dict(), dropping `None`, empty strings `''`, and empty bytes `b''`.
 
     Keep other falsy values like 0, False, and []. Django and type-annotated code favor '' over
     None for absent strings. This rule is the best forecast balance of usability; revisit as real

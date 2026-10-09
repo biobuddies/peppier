@@ -1,8 +1,9 @@
 """Test peppier utilities."""
 
+from os import getenv
 from pathlib import Path
 
-from pytest import mark
+from pytest import MonkeyPatch, mark
 
 from peppier import compact, identity, undent
 
@@ -17,6 +18,17 @@ from peppier import compact, identity, undent
 )
 def test_compact(kwargs: dict, expected: dict) -> None:
     assert compact(**kwargs) == expected
+
+
+def test_compact_environment(monkeypatch: MonkeyPatch) -> None:
+    """Forward only set variables, like measles test_integration.py downstream_environment()."""
+    monkeypatch.delenv('GITHUB_TOKEN', raising=False)
+    monkeypatch.setenv('NO_PROXY', '')
+    monkeypatch.setenv('SSL_CERT_FILE', '/etc/ssl/cert.pem')
+    assert {
+        'HOME': '/home/user',
+        **compact(**{name: getenv(name) for name in ('GITHUB_TOKEN', 'NO_PROXY', 'SSL_CERT_FILE')}),
+    } == {'HOME': '/home/user', 'NO_PROXY': '', 'SSL_CERT_FILE': '/etc/ssl/cert.pem'}
 
 
 @mark.parametrize('value', (None, 0, '', [], object()))

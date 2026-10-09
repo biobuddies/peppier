@@ -14,9 +14,9 @@ from peppier import compact, identity, undent
     (
         ({}, {}, {}),
         (
-            {'a': None, 'b': 0, 'c': '', 'd': False, 'e': []},
+            {'a': None, 'b': 0, 'c': '', 'd': False, 'e': [], 'f': b'', 'g': ' '},
             {},
-            {'b': 0, 'c': '', 'd': False, 'e': []},
+            {'b': 0, 'd': False, 'e': [], 'g': ' '},
         ),
         (None, {'a': None, 'b': 0}, {'b': 0}),
         ({1: 'one', 'a': 'a'}, {'a': None, 'b': 'b'}, {1: 'one', 'b': 'b'}),

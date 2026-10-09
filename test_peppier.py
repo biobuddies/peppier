@@ -1,5 +1,6 @@
 """Test peppier utilities."""
 
+from collections.abc import Callable
 from os import getenv
 from pathlib import Path
 
@@ -31,16 +32,34 @@ def test_compact_environment(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.delenv('GITHUB_TOKEN', raising=False)
     monkeypatch.setenv('NO_PROXY', '')
     monkeypatch.setenv('SSL_CERT_FILE', '/etc/ssl/cert.pem')
-    assert compact({
-        'GITHUB_TOKEN': getenv('GITHUB_TOKEN'),
-        'HOME': '/home/user',
-        **{name: getenv(name) for name in ('NO_PROXY', 'SSL_CERT_FILE')},
-    }) == {'HOME': '/home/user', 'NO_PROXY': '', 'SSL_CERT_FILE': '/etc/ssl/cert.pem'}
+    assert (
+        compact({
+            'GITHUB_TOKEN': getenv('GITHUB_TOKEN'),
+            'HOME': '/home/user',
+            **{name: getenv(name) for name in ('NO_PROXY', 'SSL_CERT_FILE')},
+        })
+        == compact(
+            GITHUB_TOKEN=getenv('GITHUB_TOKEN'),
+            HOME='/home/user',
+            **{name: getenv(name) for name in ('NO_PROXY', 'SSL_CERT_FILE')},
+        )
+        == {'HOME': '/home/user', 'NO_PROXY': '', 'SSL_CERT_FILE': '/etc/ssl/cert.pem'}
+    )
 
 
 @mark.parametrize('value', (None, 0, '', [], object()))
 def test_identity(value: object) -> None:
     assert identity(value) is value
+
+
+@mark.parametrize(
+    ('transform', 'expected'),
+    ((str.upper, ['B', 'A']), (identity, ['b', 'a'])),
+    ids=('upper', 'identity'),
+)
+def test_identity_map(transform: Callable[[str], str], expected: list[str]) -> None:
+    """Callers choosing a transform need not special-case leaving values alone."""
+    assert list(map(transform, ['b', 'a'])) == expected
 
 
 @mark.parametrize(

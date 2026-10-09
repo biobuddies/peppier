@@ -54,10 +54,16 @@ mdurl==0.1.2
     # via markdown-it-py
 nodejs-wheel-binaries==24.19.0
     # via basedpyright
+numpy==2.5.3
+    # via
+    #   peppier (pyproject.toml)
+    #   pandas
 packaging==26.3
     # via
     #   pytest
     #   validate-pyproject
+pandas==3.0.6
+    # via peppier (pyproject.toml)
 pathspec==1.1.1
     # via
     #   djlint
@@ -81,7 +87,9 @@ pytest==9.1.1
 pytest-cov==7.1.0
     # via peppier (pyproject.toml)
 python-dateutil==2.9.0.post0
-    # via arrow
+    # via
+    #   arrow
+    #   pandas
 python-slugify==9.1.1
     # via cookiecutter
 pyyaml==6.0.3

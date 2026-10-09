@@ -4,6 +4,8 @@ from collections.abc import Callable
 from os import getenv
 from pathlib import Path
 
+from numpy import array
+from pandas import DataFrame
 from pytest import MonkeyPatch, mark
 
 from peppier import compact, identity, undent
@@ -25,6 +27,12 @@ from peppier import compact, identity, undent
 )
 def test_compact(mapping: dict | None, kwargs: dict, expected: dict) -> None:
     assert compact(mapping, **kwargs) == expected
+
+
+@mark.parametrize('value', (array([1, 2]), DataFrame({'a': [1, 2]})), ids=('numpy', 'pandas'))
+def test_compact_ambiguous(value: object) -> None:
+    """Keep values whose truth value or == '' raises ValueError."""
+    assert compact(value=value)['value'] is value
 
 
 def test_compact_environment(monkeypatch: MonkeyPatch) -> None:

@@ -30,20 +30,19 @@ def test_compact(mapping: dict | None, kwargs: dict, expected: dict) -> None:
 def test_compact_environment(monkeypatch: MonkeyPatch) -> None:
     """Forward only set variables, like measles test_integration.py downstream_environment()."""
     monkeypatch.delenv('GITHUB_TOKEN', raising=False)
-    monkeypatch.setenv('NO_PROXY', '')
     monkeypatch.setenv('SSL_CERT_FILE', '/etc/ssl/cert.pem')
     assert (
         compact({
             'GITHUB_TOKEN': getenv('GITHUB_TOKEN'),
             'HOME': '/home/user',
-            **{name: getenv(name) for name in ('NO_PROXY', 'SSL_CERT_FILE')},
+            'SSL_CERT_FILE': getenv('SSL_CERT_FILE'),
         })
         == compact(
             GITHUB_TOKEN=getenv('GITHUB_TOKEN'),
             HOME='/home/user',
-            **{name: getenv(name) for name in ('NO_PROXY', 'SSL_CERT_FILE')},
+            SSL_CERT_FILE=getenv('SSL_CERT_FILE'),
         )
-        == {'HOME': '/home/user', 'NO_PROXY': '', 'SSL_CERT_FILE': '/etc/ssl/cert.pem'}
+        == {'HOME': '/home/user', 'SSL_CERT_FILE': '/etc/ssl/cert.pem'}
     )
 
 

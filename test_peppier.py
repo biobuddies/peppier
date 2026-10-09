@@ -4,7 +4,31 @@ from pathlib import Path
 
 from pytest import mark
 
-from peppier import undent
+from peppier import compact, identity, undent
+
+
+@mark.parametrize(
+    ('arguments', 'keywords', 'expected'),
+    (
+        ((), {}, {}),
+        (
+            ({'a': None, 'b': 0, 'c': '', 'd': False, 'e': []},),
+            {},
+            {'b': 0, 'c': '', 'd': False, 'e': []},
+        ),
+        (([('a', 1), ('b', None)],), {}, {'a': 1}),
+        (({'a': 1},), {'a': None, 'b': 2}, {'b': 2}),
+        ((), {'timeout': None, 'retries': 0}, {'retries': 0}),
+    ),
+    ids=('empty', 'falsy', 'pairs', 'override', 'keywords'),
+)
+def test_compact(arguments: tuple, keywords: dict, expected: dict) -> None:
+    assert compact(*arguments, **keywords) == expected
+
+
+@mark.parametrize('value', (None, 0, '', [], object()))
+def test_identity(value: object) -> None:
+    assert identity(value) is value
 
 
 @mark.parametrize(

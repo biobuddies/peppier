@@ -8,22 +8,16 @@ from peppier import compact, identity, undent
 
 
 @mark.parametrize(
-    ('arguments', 'keywords', 'expected'),
+    ('items', 'expected'),
     (
-        ((), {}, {}),
-        (
-            ({'a': None, 'b': 0, 'c': '', 'd': False, 'e': []},),
-            {},
-            {'b': 0, 'c': '', 'd': False, 'e': []},
-        ),
-        (([('a', 1), ('b', None)],), {}, {'a': 1}),
-        (({'a': 1},), {'a': None, 'b': 2}, {'b': 2}),
-        ((), {'timeout': None, 'retries': 0}, {'retries': 0}),
+        ({}, {}),
+        ({'a': None, 'b': 0, 'c': '', 'd': False, 'e': []}, {'b': 0, 'c': '', 'd': False, 'e': []}),
+        ([('a', 1), ('b', None)], {'a': 1}),
     ),
-    ids=('empty', 'falsy', 'pairs', 'override', 'keywords'),
+    ids=('empty', 'falsy', 'pairs'),
 )
-def test_compact(arguments: tuple, keywords: dict, expected: dict) -> None:
-    assert compact(*arguments, **keywords) == expected
+def test_compact(items: dict | list, expected: dict) -> None:
+    assert compact(items) == expected
 
 
 @mark.parametrize('value', (None, 0, '', [], object()))

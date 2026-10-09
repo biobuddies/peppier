@@ -1,11 +1,12 @@
 """Python utilities including PEP-8 wrappers."""
 
+from collections.abc import Mapping
 from textwrap import dedent
 
 
-def compact[V](**kwargs: V | None) -> dict[str, V]:
-    """Build a dict from keyword arguments, dropping None values but keeping other falsy values."""
-    return {key: value for key, value in kwargs.items() if value is not None}
+def compact[K, V](mapping: Mapping[K, V | None], /) -> dict[K, V]:
+    """Copy mapping, dropping None values but keeping other falsy values."""
+    return {key: value for key, value in mapping.items() if value is not None}
 
 
 def identity[T](value: T, /) -> T:

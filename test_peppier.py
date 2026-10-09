@@ -9,15 +9,15 @@ from peppier import compact, identity, undent
 
 
 @mark.parametrize(
-    ('kwargs', 'expected'),
+    ('mapping', 'expected'),
     (
         ({}, {}),
         ({'a': None, 'b': 0, 'c': '', 'd': False, 'e': []}, {'b': 0, 'c': '', 'd': False, 'e': []}),
     ),
     ids=('empty', 'falsy'),
 )
-def test_compact(kwargs: dict, expected: dict) -> None:
-    assert compact(**kwargs) == expected
+def test_compact(mapping: dict, expected: dict) -> None:
+    assert compact(mapping) == expected
 
 
 def test_compact_environment(monkeypatch: MonkeyPatch) -> None:
@@ -25,10 +25,11 @@ def test_compact_environment(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.delenv('GITHUB_TOKEN', raising=False)
     monkeypatch.setenv('NO_PROXY', '')
     monkeypatch.setenv('SSL_CERT_FILE', '/etc/ssl/cert.pem')
-    assert {
+    assert compact({
+        'GITHUB_TOKEN': getenv('GITHUB_TOKEN'),
         'HOME': '/home/user',
-        **compact(**{name: getenv(name) for name in ('GITHUB_TOKEN', 'NO_PROXY', 'SSL_CERT_FILE')}),
-    } == {'HOME': '/home/user', 'NO_PROXY': '', 'SSL_CERT_FILE': '/etc/ssl/cert.pem'}
+        **{name: getenv(name) for name in ('NO_PROXY', 'SSL_CERT_FILE')},
+    }) == {'HOME': '/home/user', 'NO_PROXY': '', 'SSL_CERT_FILE': '/etc/ssl/cert.pem'}
 
 
 @mark.parametrize('value', (None, 0, '', [], object()))

@@ -9,15 +9,21 @@ from peppier import compact, identity, undent
 
 
 @mark.parametrize(
-    ('mapping', 'expected'),
+    ('mapping', 'kwargs', 'expected'),
     (
-        ({}, {}),
-        ({'a': None, 'b': 0, 'c': '', 'd': False, 'e': []}, {'b': 0, 'c': '', 'd': False, 'e': []}),
+        ({}, {}, {}),
+        (
+            {'a': None, 'b': 0, 'c': '', 'd': False, 'e': []},
+            {},
+            {'b': 0, 'c': '', 'd': False, 'e': []},
+        ),
+        ({}, {'a': None, 'b': 0}, {'b': 0}),
+        ({1: 'one', 'a': 'a'}, {'a': None, 'b': 'b'}, {1: 'one', 'b': 'b'}),
     ),
-    ids=('empty', 'falsy'),
+    ids=('empty', 'mapping', 'keywords', 'keywords-override-mapping'),
 )
-def test_compact(mapping: dict, expected: dict) -> None:
-    assert compact(mapping) == expected
+def test_compact(mapping: dict, kwargs: dict, expected: dict) -> None:
+    assert compact(mapping, **kwargs) == expected
 
 
 def test_compact_environment(monkeypatch: MonkeyPatch) -> None:

@@ -36,12 +36,17 @@ pre-commit = [
     'yamllint',
 ]
 test = [
+    'numpy',
+    'pandas',
     'pytest',
     'pytest-cov',
 ]
 
 [project.urls]
 source = 'https://github.com/biobuddies/peppier'
+
+[tool.coverage.run]
+source_pkgs = ['peppier']
 
 [tool.pytest.ini_options]
 norecursedirs = ['.venv', 'node_modules', '{{cookiecutter.dot}}']
@@ -61,7 +66,6 @@ indent = 4
 max_attribute_length = 100
 max_blank_lines = 1
 max_line_length = 100
-no_entity_formatting = true
 quote_style = 'single'
 
 [tool.ruff]

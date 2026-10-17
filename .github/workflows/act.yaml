@@ -21,6 +21,7 @@ jobs:
               with:
                   fetch-depth: 0
                   ref: ${{ github.head_ref || github.ref }}
+                  submodules: true
             - uses: jdx/mise-action@v4
               with:
                   experimental: true
@@ -34,6 +35,7 @@ jobs:
               with:
                   fetch-depth: 0
                   ref: ${{ github.head_ref || github.ref }}
+                  submodules: true
             - uses: jdx/mise-action@v4
               with:
                   experimental: true
@@ -47,15 +49,11 @@ jobs:
               with:
                   fetch-depth: 0
                   ref: ${{ github.head_ref || github.ref }}
+                  submodules: true
             - uses: jdx/mise-action@v4
               with:
                   experimental: true
-            - run: |
-                  # shellcheck disable=SC2086
-                  mkdir -p $HOME/code
-                  # shellcheck disable=SC2086
-                  ln -s ../work/peppier/peppier $HOME/code/peppier
-
+            - run: mise checkout
             - run: mise test
 
     # Leaf jobs
@@ -69,6 +67,8 @@ jobs:
             name: ${{ github.head_ref || github.ref_name }}
         steps:
             - uses: actions/checkout@v7
+              with:
+                  submodules: true
             - uses: jdx/mise-action@v4
               with:
                   experimental: true
